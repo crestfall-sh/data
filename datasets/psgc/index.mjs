@@ -5,6 +5,7 @@
  * - Current version is PSGC 2022 Q3.
  * - On 2022 Q2 they added new geographic level: SGU.
  * - SGU only got 8 rows, which are intentionally excluded in the outputs.
+ * - https://psa.gov.ph/classification/psgc/
  */
 
 /**
