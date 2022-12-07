@@ -1,6 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS "extensions";
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
+-- http://0.0.0.0:5433/tasks
 CREATE TABLE public.tasks ("id" uuid DEFAULT extensions.uuid_generate_v4() PRIMARY KEY, "description" text NOT NULL);
 INSERT INTO public.tasks ("description") VALUES ('Paint a self-portrait.'), ('Build a house.');
 
