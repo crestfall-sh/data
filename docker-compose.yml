@@ -8,8 +8,8 @@ services:
     command: postgres
     environment:
       POSTGRES_DB: postgres
-      POSTGRES_USER: ${POSTGRES_USER:?error} # postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error} # postgres
+      POSTGRES_USER: ${POSTGRES_USER:?error}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error}
     volumes:
       - ./postgresql/entrypoint:/docker-entrypoint-initdb.d
       - ./volumes/postgresql/data:/var/lib/postgresql/data
@@ -18,12 +18,12 @@ services:
     network_mode: "host" # 5433
     environment:
       PGRST_DB_ANON_ROLE: anon
-      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS:?error} # public
-      PGRST_DB_EXTRA_SEARCH_PATH: ${PGRST_DB_EXTRA_SEARCH_PATH:?error} # public
+      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS:?error}
+      PGRST_DB_EXTRA_SEARCH_PATH: ${PGRST_DB_EXTRA_SEARCH_PATH:?error}
       PGRST_DB_URI: postgres://${POSTGRES_USER:?error}:${POSTGRES_PASSWORD:?error}@0.0.0.0:5432/postgres
       PGRST_SERVER_PORT: 5433
-      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:?error} # crestfall
-      PGRST_JWT_SECRET_IS_BASE64: ${PGRST_JWT_SECRET_IS_BASE64:?error} # true
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:?error}
+      PGRST_JWT_SECRET_IS_BASE64: ${PGRST_JWT_SECRET_IS_BASE64:?error}
       PGRST_JWT_AUD: crestfall
     depends_on:
       - postgresql
@@ -32,7 +32,7 @@ services:
     network_mode: "host" # 8108
     environment:
       TYPESENSE_DATA_DIR: /var/lib/typesense/data
-      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY:?error} # crestfall
+      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY:?error}
       TYPESENSE_API_PORT: 8108
       TYPESENSE_ENABLE_CORS: true
     volumes:
@@ -42,6 +42,8 @@ services:
   caddy:
     image: caddy:2
     network_mode: "host" # 80, 443, 443/udp
+    environment:
+      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY:?error}
     volumes:
       - ./volumes/caddy/data:/data
       - ./volumes/caddy/config:/config
