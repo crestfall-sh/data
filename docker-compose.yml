@@ -43,7 +43,7 @@ services:
     image: caddy:2
     network_mode: "host" # 80, 443, 443/udp
     environment:
-      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY:?error}
+      TYPESENSE_SEARCH_ONLY_KEY: ${TYPESENSE_SEARCH_ONLY_KEY:?error}
     volumes:
       - ./volumes/caddy/data:/data
       - ./volumes/caddy/config:/config
