@@ -32,6 +32,7 @@ assert(env.has('PGRST_JWT_SECRET') === true);
 assert(env.has('PGRST_JWT_SECRET_IS_BASE64') === true);
 assert(env.get('PGRST_JWT_SECRET_IS_BASE64') === 'true');
 assert(env.has('TYPESENSE_API_KEY') === true);
+assert(env.has('TYPESENSE_SEARCH_ONLY_KEY') === true);
 
 console.log(env);
 
@@ -198,6 +199,8 @@ const psgc_barangays = {
 };
 
 const TYPESENSE_API_KEY = env.get('TYPESENSE_API_KEY');
+const TYPESENSE_SEARCH_ONLY_KEY = env.get('TYPESENSE_SEARCH_ONLY_KEY');
+
 
 const get_collections = async () => {
   const response = await fetch('http://0.0.0.0:8108/collections', {
@@ -268,6 +271,79 @@ const post_documents = async (collection_name, documents) => {
   return response_body;
 };
 
+const get_keys = async () => {
+  const response = await fetch('http://0.0.0.0:8108/keys', {
+    method: 'GET',
+    headers: { 'X-TYPESENSE-API-KEY': TYPESENSE_API_KEY },
+  });
+  assert(response.status === 200);
+  assert(response.headers.get('content-type').includes('application/json') === true);
+  /**
+   * @type {any}
+   */
+  const response_body = await response.json();
+  if (response_body instanceof Object) {
+    if (response_body.keys instanceof Array) {
+      return response_body.keys;
+    }
+  }
+  return null;
+};
+
+/**
+ * @param {string} value
+ * @param {string} description
+ * @param {string[]} actions
+ * @param {string[]} collections
+ * @param {null} expires_at
+ */
+const post_key = async (value, description, actions, collections, expires_at) => {
+  assert(typeof value === 'string');
+  assert(typeof description === 'string');
+  assert(actions instanceof Array);
+  actions.forEach((action) => {
+    assert(typeof action === 'string');
+  });
+  assert(collections instanceof Array);
+  collections.forEach((collection) => {
+    assert(typeof collection === 'string');
+  });
+  assert(typeof expires_at === 'number' || expires_at === null);
+  const response = await fetch('http://0.0.0.0:8108/keys', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-TYPESENSE-API-KEY': TYPESENSE_API_KEY,
+    },
+    body: JSON.stringify({
+      value: value,
+      description: description,
+      actions: actions,
+      collections: collections,
+      expires_at: expires_at || undefined,
+    }),
+  });
+  assert(response.status === 201);
+  assert(response.headers.get('content-type').includes('application/json') === true);
+  const response_body = await response.json();
+  return response_body;
+};
+
+/**
+ * @param {number} id
+ */
+const delete_key = async (id) => {
+  assert(typeof id === 'number');
+  const response = await fetch(`http://0.0.0.0:8108/keys/${id}`, {
+    method: 'DELETE',
+    headers: { 'X-TYPESENSE-API-KEY': TYPESENSE_API_KEY },
+  });
+  assert(response.status === 200 || response.status === 404);
+  assert(response.headers.get('content-type').includes('application/json') === true);
+  const response_body = await response.json();
+  return response_body;
+};
+
 {
   /**
    * @type {any}
@@ -288,6 +364,36 @@ const datasets = [
   psgc_submunicipalities,
   psgc_barangays,
 ];
+
+{
+  console.log('typesense: getting keys..');
+  const keys = await get_keys();
+  if (keys instanceof Array) {
+    for (let i = 0, l = keys.length; i < l; i += 1) {
+      const key = keys[i];
+      if (key instanceof Object) {
+        if (typeof key.value_prefix === 'string') {
+          if (key.value_prefix === TYPESENSE_SEARCH_ONLY_KEY.substring(0, 4)) {
+            if (typeof key.id === 'number') {
+              console.log(`typesense: deleting key ${TYPESENSE_SEARCH_ONLY_KEY}..`);
+              await delete_key(key.id);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+{
+  console.log(`typesense: creating key ${TYPESENSE_SEARCH_ONLY_KEY}..`);
+  const description = 'Search-only key.';
+  const actions = ['documents:search'];
+  const collections = [...datasets.map((dataset) => dataset.collection.name)];
+  const expires_at = null;
+  await post_key(TYPESENSE_SEARCH_ONLY_KEY, description, actions, collections, expires_at);
+}
+
 for (let i = 0, l = datasets.length; i < l; i += 1) {
   const dataset = datasets[i];
   console.log(`typesense: creating ${dataset.collection.name}..`);
