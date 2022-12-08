@@ -262,9 +262,9 @@ const post_documents = async (collection_name, documents) => {
     },
     body: documents.map((document) => JSON.stringify(document)).join('\n'),
   });
-  assert(response.status === 201);
-  assert(response.headers.get('content-type').includes('application/json') === true);
-  const response_body = await response.json();
+  assert(response.status === 200);
+  assert(response.headers.get('content-type').includes('text/plain') === true);
+  const response_body = await response.text();
   return response_body;
 };
 
