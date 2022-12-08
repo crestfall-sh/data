@@ -244,6 +244,30 @@ const post_collection = async (collection) => {
   return response_body;
 };
 
+/**
+ * @param {string} collection_name
+ * @param {document[]} documents
+ */
+const post_documents = async (collection_name, documents) => {
+  assert(typeof collection_name === 'string');
+  assert(documents instanceof Array);
+  documents.forEach((document) => {
+    assert(document instanceof Object);
+  });
+  const response = await fetch(`http://0.0.0.0:8108/collections/${collection_name}/documents/import?action=create`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+      'X-TYPESENSE-API-KEY': TYPESENSE_API_KEY,
+    },
+    body: documents.map((document) => JSON.stringify(document)).join('\n'),
+  });
+  assert(response.status === 201);
+  assert(response.headers.get('content-type').includes('application/json') === true);
+  const response_body = await response.json();
+  return response_body;
+};
+
 {
   /**
    * @type {any}
@@ -251,7 +275,7 @@ const post_collection = async (collection) => {
   const collections = await get_collections();
   for (let i = 0, l = collections.length; i < l; i += 1) {
     const collection = collections[i];
-    console.log(`typesense: deleting ${collection.name}`);
+    console.log(`typesense: deleting ${collection.name}..`);
     await delete_collection(collection.name);
   }
 }
@@ -266,10 +290,11 @@ const datasets = [
 ];
 for (let i = 0, l = datasets.length; i < l; i += 1) {
   const dataset = datasets[i];
-  console.log(`typesense: creating ${dataset.collection.name}`);
+  console.log(`typesense: creating ${dataset.collection.name}..`);
   await post_collection(dataset.collection);
   if (dataset.documents.length > 0) {
-    await typesense_client.collections(collection.schema.name).documents().import(collection.documents, { action: 'create' });
+    console.log(`typesense: posting ${dataset.documents.length} documents..`);
+    await post_documents(dataset.collection.name, dataset.documents);
   }
 }
 

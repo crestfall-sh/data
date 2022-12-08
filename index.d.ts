@@ -12,7 +12,7 @@ export interface collection {
 
 export interface dataset {
   collection: collection;
-  documents: document;
+  documents: document[];
 }
 
 export type document = Record<string, string|number|boolean|any>;
