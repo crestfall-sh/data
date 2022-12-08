@@ -7,17 +7,18 @@
   }
 }
 
+# http://0.0.0.0:8108/collections/psgc-regions/documents/search?x-typesense-api-key=JjZTsOnPJBDPF474n9w4IOe5z1OJLDwbH6TgRIaLm0U=&q=&query_by=name_extended
+
 # note: exclude trailing slash
 # correct: http://localhost
 # incorrect: http://localhost/
 http://localhost, http://0.0.0.0 {
-  handle /auth/ {
-    uri replace /auth/ /
-    reverse_proxy 0.0.0.0:9090
-  }
-  handle /studio/ {
-    uri replace /studio/ /
-    reverse_proxy 0.0.0.0:9091
+  handle /psgc-regions/search {
+    request_header {
+      X-TYPESENSE-API-KEY {$TYPESENSE_SEARCH_ONLY_KEY}
+    }
+    uri replace /psgc-regions/search /collections/psgc-regions/documents/search
+    reverse_proxy 0.0.0.0:8108
   }
   handle {
     respond 404

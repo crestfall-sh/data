@@ -43,7 +43,6 @@ const psgc_regions = {
   collection: {
     name: 'psgc-regions',
     fields: [
-      { name: 'id', type: 'string' },
       { name: 'code', type: 'int32' },
       { name: 'name', type: 'string' },
       { name: 'name_extended', type: 'string' },
@@ -71,7 +70,6 @@ const psgc_provinces = {
   collection: {
     name: 'psgc-provinces',
     fields: [
-      { name: 'id', type: 'string' },
       { name: 'code', type: 'int32' },
       { name: 'name', type: 'string' },
       { name: 'name_extended', type: 'string' },
@@ -99,7 +97,6 @@ const psgc_cities = {
   collection: {
     name: 'psgc-cities',
     fields: [
-      { name: 'id', type: 'string' },
       { name: 'code', type: 'int32' },
       { name: 'name', type: 'string' },
       { name: 'name_extended', type: 'string' },
@@ -127,7 +124,6 @@ const psgc_municipalities = {
   collection: {
     name: 'psgc-municipalities',
     fields: [
-      { name: 'id', type: 'string' },
       { name: 'code', type: 'int32' },
       { name: 'name', type: 'string' },
       { name: 'name_extended', type: 'string' },
@@ -154,7 +150,6 @@ const psgc_submunicipalities = {
   collection: {
     name: 'psgc-submunicipalities',
     fields: [
-      { name: 'id', type: 'string' },
       { name: 'code', type: 'int32' },
       { name: 'name', type: 'string' },
       { name: 'name_extended', type: 'string' },
@@ -181,7 +176,6 @@ const psgc_barangays = {
   collection: {
     name: 'psgc-barangays',
     fields: [
-      { name: 'id', type: 'string' },
       { name: 'code', type: 'int32' },
       { name: 'name', type: 'string' },
       { name: 'name_extended', type: 'string' },
