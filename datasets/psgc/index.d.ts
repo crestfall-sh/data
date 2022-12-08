@@ -1,4 +1,4 @@
-export interface record {
+export interface document {
   id: string;
   code: number;
   name: string;
@@ -12,26 +12,26 @@ export interface record {
   population_2020: string;
 }
 
-export interface region extends record {
+export interface region extends document {
   districts: district[];
   provinces: province[];
 }
 
-export interface district extends record {
+export interface district extends document {
   region_code: number;
   region_name: string;
   cities: city[];
   municipalities: municipality[];
 }
 
-export interface province extends record {
+export interface province extends document {
   region_code: number;
   region_name: string;
   cities: city[];
   municipalities: municipality[];
 }
 
-export interface city extends record {
+export interface city extends document {
   region_code: number;
   region_name: string;
   district_code: number;
@@ -42,7 +42,7 @@ export interface city extends record {
   barangays: barangay[];
 }
 
-export interface municipality extends record {
+export interface municipality extends document {
   region_code: number;
   region_name: string;
   district_code: number;
@@ -52,7 +52,7 @@ export interface municipality extends record {
   barangays: barangay[];
 }
 
-export interface submunicipality extends record {
+export interface submunicipality extends document {
   region_code: number;
   region_name: string;
   district_code: number;
@@ -64,7 +64,7 @@ export interface submunicipality extends record {
   barangays: barangay[];
 }
 
-export interface barangay extends record {
+export interface barangay extends document {
   region_code: number;
   region_name: string;
   district_code: number;
@@ -90,3 +90,4 @@ export interface psgc {
 }
 
 export const psgc: psgc;
+export default psgc;

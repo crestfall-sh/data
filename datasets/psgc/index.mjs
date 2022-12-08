@@ -9,7 +9,7 @@
  */
 
 /**
- * @typedef {import('.').record} record
+ * @typedef {import('.').document} document
  * @typedef {import('.').region} region
  * @typedef {import('.').district} district
  * @typedef {import('.').province} province
@@ -233,9 +233,9 @@ console.log('psgc: parsing data..');
       console.error({ next_row_index, code, population_2015, population_2020 });
     }
     /**
-     * @type {record}
+     * @type {document}
      */
-    const record = {
+    const document = {
       id,
       code,
       name,
@@ -253,7 +253,7 @@ console.log('psgc: parsing data..');
     switch (geographic_level) {
 
       case geographic_levels[constants.Reg]: {
-        region = { ...record, districts: [], provinces: [] };
+        region = { ...document, districts: [], provinces: [] };
         district = null;
         province = null;
         city = null;
@@ -264,16 +264,16 @@ console.log('psgc: parsing data..');
       }
 
       case geographic_levels[constants.Dist]: {
-        record.name = record.name
+        document.name = document.name
           .replace('City of Manila, ', '')
           .replace('NCR, ', '')
           .replace(' (Not a Province)', '');
-        record.name_extended = record.name_extended
+        document.name_extended = document.name_extended
           .replace('City of Manila, ', '')
           .replace('NCR, ', '')
           .replace(' (Not a Province)', '');
         district = {
-          ...record,
+          ...document,
           region_code: null,
           region_name: null,
           cities: [],
@@ -295,7 +295,7 @@ console.log('psgc: parsing data..');
       case geographic_levels[constants.Prov]: {
         district = null;
         province = {
-          ...record,
+          ...document,
           region_code: null,
           region_name: null,
           cities: [],
@@ -316,7 +316,7 @@ console.log('psgc: parsing data..');
 
       case geographic_levels[constants.City]: {
         city = {
-          ...record,
+          ...document,
           region_code: null,
           region_name: null,
           district_code: null,
@@ -350,7 +350,7 @@ console.log('psgc: parsing data..');
       case geographic_levels[constants.Mun]: {
         city = null;
         municipality = {
-          ...record,
+          ...document,
           region_code: null,
           region_name: null,
           district_code: null,
@@ -382,7 +382,7 @@ console.log('psgc: parsing data..');
 
       case geographic_levels[constants.SubMun]: {
         submunicipality = {
-          ...record,
+          ...document,
           region_code: null,
           region_name: null,
           district_code: null,
@@ -420,7 +420,7 @@ console.log('psgc: parsing data..');
          * @type {barangay}
          */
         const barangay = {
-          ...record,
+          ...document,
           region_code: null,
           region_name: null,
           district_code: null,
@@ -538,3 +538,5 @@ export const psgc = {
   submunicipalities,
   barangays,
 };
+
+export default psgc;
