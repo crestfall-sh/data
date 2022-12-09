@@ -2,7 +2,7 @@
 
 ## Overview
 
-Crestfall Open Data APIs provides publicly-accessible APIs for commonly-used datasets.
+Public API access for common datasets.
 
 ## Roadmap
 
