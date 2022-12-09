@@ -55,6 +55,27 @@ Disclaimer: The PSGC is being distributed without warranty of any kind, either e
 - https://data.crestfall.sh/typesense/psgc-submunicipalities?q=
 - https://data.crestfall.sh/typesense/psgc-barangays?q=
 
+#### Deployment
+
+- Create Virtual Machine instance
+- Configure DNS, create A record for data.crestfall.sh with VM IP Address as value
+- Connect to Server Instance: `ssh ubuntu@data.crestfall.sh`
+- Sign-in as root: `sudo su -`
+- Install Docker: https://docs.docker.com/engine/install/ubuntu/
+- Install Node.js: https://github.com/nodesource/distributions#deb
+- Generate SSH key: `ssh-keygen`
+- Show SSH public key: `cat ~/.ssh/id_rsa.pub`
+- Add SSH public key in your GitHub account
+- Clone the github repository: `git clone git@github.com:crestfall-sh/data.git`
+- Install dependencies with NPM: `npm install`
+- Run with docker: docker `compose up --detach`
+- Populate database with data: `node ./index.mjs`
+
+#### Support
+
+- Issues: https://github.com/crestfall-sh/data/issues
+- Discussions: https://github.com/crestfall-sh/data/discussions
+
 ## License
 
 MIT
