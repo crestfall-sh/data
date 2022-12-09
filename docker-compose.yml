@@ -38,7 +38,7 @@ services:
     volumes:
       - ./volumes/typesense/data:/var/lib/typesense/data
     depends_on:
-      - postgresql
+      - postgrest
   caddy:
     image: caddy:2
     network_mode: "host" # 80, 443, 443/udp
@@ -49,3 +49,5 @@ services:
       - ./volumes/caddy/config:/config
       - ./volumes/caddy/logs:/var/log/caddy/
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - typesense

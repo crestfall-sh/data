@@ -13,12 +13,14 @@
 # correct: http://localhost
 # incorrect: http://localhost/
 http://localhost, http://0.0.0.0 {
-  handle /psgc-regions/search {
-    rewrite /psgc-regions/search /collections/psgc-regions/documents/search?x-typesense-api-key={$TYPESENSE_SEARCH_ONLY_KEY}&query_by=name_extended&{query}
-    uri replace /psgc-regions/search /collections/psgc-regions/documents/search
-    reverse_proxy 0.0.0.0:8108
-  }
+  # handle /psgc-regions/search {
+  #   rewrite /psgc-regions/search /collections/psgc-regions/documents/search?x-typesense-api-key={$TYPESENSE_SEARCH_ONLY_KEY}&query_by=name_extended&{query}
+  #   uri replace /psgc-regions/search /collections/psgc-regions/documents/search
+  #   reverse_proxy 0.0.0.0:8108
+  # }
   handle {
-    respond 404
+    header_up X-TYPESENSE-API-KEY {$TYPESENSE_SEARCH_ONLY_KEY}
+    reverse_proxy 0.0.0.0:8108
+    # respond 404
   }
 }

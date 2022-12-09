@@ -317,6 +317,8 @@ const post_key = async (value, description, actions, collections, expires_at) =>
       expires_at: expires_at || undefined,
     }),
   });
+  console.log(response.status);
+  console.log(response.headers);
   assert(response.status === 201);
   assert(response.headers.get('content-type').includes('application/json') === true);
   const response_body = await response.json();
@@ -333,6 +335,30 @@ const delete_key = async (id) => {
     headers: { 'X-TYPESENSE-API-KEY': TYPESENSE_API_KEY },
   });
   assert(response.status === 200 || response.status === 404);
+  assert(response.headers.get('content-type').includes('application/json') === true);
+  const response_body = await response.json();
+  return response_body;
+};
+
+/**
+ * @param {string} api_key
+ * @param {string} collection_name
+ * @param {Record<string, string>} parameters
+ */
+const search = async (api_key, collection_name, parameters) => {
+  assert(typeof collection_name === 'string');
+  assert(parameters instanceof Object);
+  const url = new URL('http://0.0.0.0:8108/');
+  url.pathname = `/collections/${collection_name}/documents/search`;
+  url.search = new URLSearchParams(parameters).toString();
+  console.log(url.toString());
+  const response = await fetch(url.toString(), {
+    method: 'GET',
+    headers: { 'X-TYPESENSE-API-KEY': api_key },
+  });
+  console.log(response.status);
+  console.log(response.headers);
+  assert(response.status === 200);
   assert(response.headers.get('content-type').includes('application/json') === true);
   const response_body = await response.json();
   return response_body;
@@ -358,6 +384,16 @@ const datasets = [
   psgc_submunicipalities,
   psgc_barangays,
 ];
+
+for (let i = 0, l = datasets.length; i < l; i += 1) {
+  const dataset = datasets[i];
+  console.log(`typesense: creating ${dataset.collection.name}..`);
+  await post_collection(dataset.collection);
+  if (dataset.documents.length > 0) {
+    console.log(`typesense: posting ${dataset.documents.length} documents..`);
+    await post_documents(dataset.collection.name, dataset.documents);
+  }
+}
 
 {
   console.log('typesense: getting keys..');
@@ -388,18 +424,7 @@ const datasets = [
   await post_key(TYPESENSE_SEARCH_ONLY_KEY, description, actions, collections, expires_at);
 }
 
-for (let i = 0, l = datasets.length; i < l; i += 1) {
-  const dataset = datasets[i];
-  console.log(`typesense: creating ${dataset.collection.name}..`);
-  await post_collection(dataset.collection);
-  if (dataset.documents.length > 0) {
-    console.log(`typesense: posting ${dataset.documents.length} documents..`);
-    await post_documents(dataset.collection.name, dataset.documents);
-  }
+{
+  console.log(`typesense: testing key ${TYPESENSE_SEARCH_ONLY_KEY}..`);
+  await search(TYPESENSE_SEARCH_ONLY_KEY, 'psgc-regions', { q: '', query_by: 'name_extended' });
 }
-
-// [ ] postgresql schema
-// [ ] postgresql insert
-
-// [ ] typesense schema
-// [ ] typesense insert
