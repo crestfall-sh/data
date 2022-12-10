@@ -58,6 +58,19 @@ Disclaimer: The PSGC is being distributed without warranty of any kind, either e
 - https://data.crestfall.sh/typesense/psgc-submunicipalities?q=
 - https://data.crestfall.sh/typesense/psgc-barangays?q=
 
+## JavaScript Client
+
+```sh
+npm install github:crestfall-sh/data
+```
+
+```js
+import * as client from '@crestfall-sh/data/client.mjs';
+
+const response = await client.search('https://data.crestfall.sh/typesense/psgc-barangays', '', 1);
+console.log(response);
+```
+
 ## Deployment
 
 - Create Virtual Machine instance
@@ -74,19 +87,6 @@ Disclaimer: The PSGC is being distributed without warranty of any kind, either e
 - Initialize environment file: `bash ./env.sh`
 - Run with docker: docker `compose up --detach`
 - Populate database with data: `node ./index.mjs`
-
-## JavaScript Client
-
-```sh
-npm install github:crestfall-sh/data
-```
-
-```js
-import * as client from '@crestfall-sh/data/client.mjs';
-
-const response = await client.search('https://data.crestfall.sh/typesense/psgc-barangays', '', 1);
-console.log(response);
-```
 
 ## Support
 
