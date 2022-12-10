@@ -14,15 +14,26 @@ Public API access for common datasets.
 
 - Actively used for search purposes.
 
+#### JavaScript Client 
+
+```
+npm install github:crestfall-sh/data
+```
+
+- [x] typesense: search
+- [ ] typesense: sorting
+- [ ] typesense: filtering
+- [ ] typesense: pagination
+- [ ] typesense: use of debounce, use of abortcontroller, handling of aborterror
+
+#### User Interfaces
+
+- Select, Multi-select, Search, Multi-search.
+- Planned.
+
 #### PostgreSQL & PostgREST
 
 - Planned use for data enumeration purposes.
-
-#### JavaScript Client & User Interfaces
-
-- Debounced search, sorting, filtering, pagination.
-- Select, Multi-select, Search, Multi-search.
-- Planned.
 
 #### Datasets in various formats
 

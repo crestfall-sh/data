@@ -33,7 +33,7 @@ export interface request_params {
   q: string;
 }
 
-export interface typesense_response {
+export interface response {
   facet_counts: facet_counts[];
   found: number;
   hits: hit[];
@@ -43,5 +43,3 @@ export interface typesense_response {
   search_time_ms: number;
   search_cutoff: boolean;
 }
-
-export type search = () => Promise<typesense_response>;
